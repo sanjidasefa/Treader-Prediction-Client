@@ -15,15 +15,9 @@ const Header = () => {
               </svg>
             </div>
             <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow-2xl bg-base-100/80 backdrop-blur-lg rounded-box w-52">
-              <li><a>Predictions</a></li>
-              <li>
-                <a>History</a>
-                <ul className="p-2">
-                  <li><a>Recent</a></li>
-                  <li><a>All Time</a></li>
-                </ul>
-              </li>
-              <li><a>Stats</a></li>
+              <li><Link to='/'>HOME</Link></li>
+            
+            <li><Link to='/Dashboard'>DASHBOARD</Link></li>
             </ul>
           </div>
           <a className="btn btn-ghost text-xl iosevka-charon-bold tracking-tight">
@@ -33,17 +27,9 @@ const Header = () => {
 
         <div className="navbar-center hidden lg:flex">
           <ul className="menu menu-horizontal px-1 font-medium">
-            <li><a>Predictions</a></li>
-            <li>
-              <details>
-                <summary>Analytics</summary>
-                <ul className="p-2 bg-base-100/90 backdrop-blur-md w-40">
-                  <li><a>Live Feed</a></li>
-                  <li><a>Results</a></li>
-                </ul>
-              </details>
-            </li>
-            <li><a>Leaderboard</a></li>
+             <li><Link to='/'>HOME</Link></li>
+          
+            <li><Link to='/Dashboard'>DASHBOARD</Link></li>
           </ul>
         </div>
 

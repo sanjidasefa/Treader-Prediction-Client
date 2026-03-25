@@ -1,6 +1,7 @@
 import React from 'react';
 import img from '../../assets/loginBg.jpg'
 import Login from '../Login/Login';
+import introimg from '../../../public/icon.jpeg'
 const Introduction = () => {
   return (
     <div className="relative min-h-[80vh] flex items-center justify-center overflow-hidden rounded-3xl font-sans">
@@ -21,7 +22,9 @@ const Introduction = () => {
 
       {/* Main Glass Card */}
       <div className="relative z-10 max-w-4xl w-full mx-4 p-8 md:p-16 bg-white/10 dark:bg-black/20 backdrop-blur-sm border border-white/20 shadow-2xl rounded-[2rem] text-center">
-        
+     <div className='flex justify-center'>
+         <img src={introimg} alt="" className='rounded-full mb-5 w-2/4' />
+     </div>
         <div className="mb-6">
           <div className="badge badge-primary badge-outline py-3 px-4 font-semibold tracking-widest uppercase text-xs mb-4 iosevka-charon-medium">
             Official Prediction Portal
