@@ -1,137 +1,201 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { AlertCircle, TrendingUp, TrendingDown, Zap, Clock, Activity, Target, ShieldCheck } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Zap, Target, LayoutGrid, Globe, X, Activity, ShieldCheck } from 'lucide-react';
 import api from '../../../api/axios';
 
 const Prediction = () => {
   const [data, setData] = useState(null);
   const [countdown, setCountdown] = useState(30);
+  const [showWeb, setShowWeb] = useState(false);
 
   const fetchDynamicData = async () => {
     try {
       const response = await api.get('/prediction');
-      if (response.data) {
-        setData(response.data);
-      }
-    } catch (error) {
-      console.error("Vercel Connection Error:", error);
-    }
+      if (response.data) setData(response.data);
+    } catch (error) { console.error("Sync Error:", error); }
   };
 
   useEffect(() => {
-    fetchDynamicData(); 
-   
+    fetchDynamicData();
     const timer = setInterval(() => {
       setCountdown((prev) => {
-        if (prev <= 1) {
-          fetchDynamicData();
-          return 30; 
-        }
+        if (prev <= 1) { fetchDynamicData(); return 30; }
         return prev - 1;
       });
     }, 1000);
-
     return () => clearInterval(timer);
   }, []);
 
-  if (!data) return <div className="text-center p-10 font-bold opacity-30">Connecting to RS Algo Engine...</div>;
+  if (!data) return (
+    <div className="h-screen flex flex-col items-center rounded-2xl justify-center bg-[#050505]">
+      <motion.div 
+        animate={{ scale: [1, 1.2, 1], rotate: [0, 180, 360] }}
+        transition={{ duration: 2, repeat: Infinity }}
+        className="w-12 h-12 border-4 border-cyan-500 border-t-transparent rounded-full"
+      />
+      <p className="text-cyan-500 mt-4 font-mono tracking-[0.5em] animate-pulse">ESTABLISHING UPLINK...</p>
+    </div>
+  );
 
-  const isBig = data.signal === "BIG";
+  // Database er color field theke CSS class define kora
+  const getStatusColor = (colorName) => {
+    const c = colorName?.toLowerCase();
+    if (c?.includes('red')) return 'from-red-500 to-red-600';
+    if (c?.includes('green')) return 'from-green-500 to-green-600';
+    if (c?.includes('violet')) return 'from-purple-500 to-purple-600';
+    return 'from-cyan-500 to-blue-500'; // Default
+  };
+
+  const isBig = data.prediction?.toUpperCase() === "BIG";
+  const glowColor = data.color?.toLowerCase().includes('red') ? 'rgba(239, 68, 68, 0.4)' : 'rgba(34, 197, 94, 0.4)';
 
   return (
-    <div className="relative group overflow-hidden bg-white/5 border border-white/10 backdrop-blur-3xl p-10 rounded-[3rem] shadow-2xl transition-all hover:border-primary/20">
-      
-      {/* Background Glow (matching current signal) */}
-      <div className={`absolute -top-24 -left-24 w-48 h-48 rounded-full blur-[80px] ${isBig ? 'bg-orange-500/10' : 'bg-blue-500/10'}`}></div>
-
-      {/* Header Info */}
-      <div className="flex justify-between items-start mb-10 z-10 relative">
-        <div>
-          <span className="text-[10px] uppercase tracking-[0.3em] font-black text-gray-400 block mb-1">Live RS Algo V3.0</span>
-          <h2 className="text-2xl font-black tracking-tight flex items-center gap-2">
-            <Zap size={22} className="text-yellow-400 animate-pulse uppercase" />R(S) COMMUNITY CENTER PREDICTOR
-          </h2>
-        </div>
-        <div className="text-right flex flex-col items-end">
-          <span className="text-[10px] uppercase opacity-40 font-bold block mb-1 tracking-widest">Update In</span>
-          <span className="font-mono text-3xl font-black text-primary transition-all duration-300">
-            {countdown}s
-          </span>
-          <span className="text-[11px] opacity-30 mt-1 font-bold">30s Signal Engine</span>
-        </div>
-      </div>
-
-      {/* Main Signal Display */}
-      <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-12 p-8 rounded-[2.5rem] bg-black/20 border border-white/5 shadow-inner">
+    <div className="min-h-screen bg-[#050505] text-slate-200 p-4 lg:p-8 font-sans">
+      <div className="max-w-[1400px] mx-auto flex flex-col lg:flex-row gap-8">
         
-        <div className="flex flex-col items-center md:items-start text-center md:text-left">
-           <span className="text-[11px] uppercase opacity-40 font-black tracking-[0.2em] mb-1">Next Signal</span>
-           <h1 className={`text-7xl md:text-8xl font-black tracking-tighter uppercase drop-shadow-lg ${isBig ? 'text-orange-400' : 'text-blue-400'}`}>
-              {data.signal}
-           </h1>
-           <div className="flex gap-1.5 mt-2 font-black font-mono text-lg opacity-80 tracking-widest text-primary/80">
-               [{data.numbers.join("   ")}]
-           </div>
-        </div>
+        {/* --- MAIN PREDICTION PANEL --- */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className={`flex-grow space-y-8 transition-all duration-700 ${showWeb ? 'lg:w-[45%]' : 'w-full'}`}
+        >
+          
+          {/* Top Bar */}
+          <div className="flex justify-between items-center bg-white/5 backdrop-blur-xl p-5 rounded-2xl border border-white/10 shadow-[0_0_20px_rgba(0,0,0,0.5)]">
+            <div className="flex items-center gap-4">
+              <div className="p-2 bg-cyan-500/20 rounded-lg">
+                <Activity className="text-cyan-400 animate-pulse" size={20} />
+              </div>
+              <div>
+                <h2 className="text-xs font-black tracking-widest text-cyan-500 uppercase">RS ALGO V4 • PRO</h2>
+                <div className="flex items-center gap-2">
+                  <span className={`w-2 h-2 rounded-full animate-ping ${data.color?.toLowerCase().includes('red') ? 'bg-red-500' : 'bg-green-500'}`} />
+                  <span className="text-[10px] text-white/40 font-mono">LIVE SERVER CONNECTED</span>
+                </div>
+              </div>
+            </div>
 
-        <div className="w-full md:w-auto p-6 rounded-2xl bg-white/5 border border-white/10 text-center flex-grow flex items-center justify-center gap-6">
-           <div className="flex flex-col items-center">
-             <span className="text-[11px] opacity-40 uppercase font-black tracking-widest">Accuracy</span>
-             <span className={`text-5xl font-black tracking-tight ${data.accuracy >= 80 ? 'text-success' : 'text-primary'}`}>
-               {data.accuracy}%
-             </span>
-           </div>
-           <div className="w-[1px] h-12 bg-white/10"></div>
-           <div className="flex-grow w-full">
-               <span className="text-[11px] opacity-40 uppercase font-black tracking-widest text-left block mb-1">Signal Strength</span>
-               <progress className="progress progress-primary w-full h-1" value={data.signalStrength} max="100"></progress>
-           </div>
-        </div>
-      </div>
-
-      {/* History Grid (Image history pattern) */}
-      <div className="mb-12">
-          <span className="text-[11px] uppercase opacity-40 font-black tracking-widest mb-3 block">Pattern History</span>
-          <div className="grid grid-cols-8 gap-2">
-              {data.lastUpdates.map((item, index) => {
-                  const type = item.includes('B') ? 'BIG' : 'SMALL';
-                  const number = item.replace('B', '').replace('S', '');
-                  const isPositive = type === 'BIG';
-                  
-                  return (
-                      <div key={index} className={`flex flex-col items-center p-3 rounded-lg bg-black/30 border border-white/5 transition-all duration-300 hover:-translate-y-1 ${isPositive ? 'border-orange-500/20' : 'border-blue-500/20'}`}>
-                        <span className={`font-black font-mono text-xl ${isPositive ? 'text-orange-400' : 'text-blue-400'}`}>
-                           {number}
-                        </span>
-                        <span className={`text-[10px] uppercase font-bold ${isPositive ? 'text-orange-500/60' : 'text-blue-500/60'}`}>
-                           {type.charAt(0)}
-                        </span>
-                      </div>
-                  );
-              })}
+            <button 
+              onClick={() => setShowWeb(!showWeb)}
+              className="group relative flex items-center gap-2 bg-white/5 hover:bg-cyan-500/20 px-6 py-2.5 rounded-xl border border-white/10 transition-all overflow-hidden"
+            >
+              {showWeb ? <X size={16} className="text-red-400"/> : <Globe size={16} className="text-cyan-400"/>}
+              <span className="text-xs font-bold tracking-tighter uppercase">{showWeb ? "Exit Market" : "Terminal View"}</span>
+            </button>
           </div>
-      </div>
 
-      {/* Stats Cards (4 grid items from image) */}
-      <div className="grid grid-cols-2 gap-4">
-          {[
-              { title: "Market Strength", value: `${data.marketStrength}%`, icon: <Target size={18} /> },
-              { title: "Avg Accuracy", value: `${data.accuracy}%`, icon: <ShieldCheck size={18} /> },
-          ].map((item, idx) => (
-             <div key={idx} className="bg-white/5 backdrop-blur-lg border border-white/10 p-5 rounded-2xl flex items-center gap-4 transition-all duration-300 hover:scale-105 active:scale-95 cursor-default group">
-                <div className="p-3 bg-primary/10 rounded-xl text-primary border border-primary/20 group-hover:bg-primary/20 transition-all">
-                    {item.icon}
+          {/* Center Display */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {/* Prediction Card */}
+            <motion.div 
+              whileHover={{ y: -5 }}
+              className="relative group bg-gradient-to-br from-white/10 to-transparent p-1 shadow-2xl rounded-[2.5rem]"
+            >
+              <div className="bg-[#0a0a0a] rounded-[2.4rem] p-10 h-full relative overflow-hidden">
+                {/* Glow based on DB color */}
+                <div className="absolute top-0 right-0 w-32 h-32 blur-[80px] opacity-20" style={{ backgroundColor: glowColor }} />
+                
+                <p className="text-[10px] font-bold text-white/40 tracking-[0.3em] mb-2">NEXT ANALYSIS</p>
+                <motion.h1 
+                  key={data.prediction}
+                  initial={{ x: -20, opacity: 0 }} animate={{ x: 0, opacity: 1 }}
+                  className={`text-8xl font-black tracking-tighter italic ${isBig ? 'text-orange-500' : 'text-cyan-400'}`}
+                  style={{ filter: `drop-shadow(0 0 15px ${glowColor})` }}
+                >
+                  {data.prediction}
+                </motion.h1>
+                
+                <div className="mt-8 flex items-center gap-4 text-white/30 font-mono text-[11px]">
+                  <span className="bg-white/5 px-3 py-1 rounded-full border border-white/5">PERIOD {data.period}</span>
+                  <span className={`px-3 py-1 rounded-full border border-white/5 bg-gradient-to-r ${getStatusColor(data.color)} text-white font-bold`}>
+                    {data.color?.toUpperCase()}
+                  </span>
                 </div>
-                <div>
-                   <h2 className="text-2xl font-black font-mono">{item.value}</h2>
-                   <p className="text-[10px] uppercase opacity-40 font-black tracking-widest">{item.title}</p>
-                </div>
-             </div>
-          ))}
-      </div>
+              </div>
+            </motion.div>
 
-      {/* Progress Bar (Visual Timer) */}
-      <div className="absolute bottom-0 left-0 h-1 bg-primary/30 transition-all duration-1000" style={{ width: `${(countdown / 30) * 100}%` }}></div>
+            {/* Result Number Card */}
+            <motion.div 
+              whileHover={{ y: -5 }}
+              className="bg-white/5 border border-white/10 p-10 rounded-[2.5rem] flex flex-col justify-center relative overflow-hidden"
+            >
+               <div className="relative z-10 text-center">
+                  <p className="text-[10px] font-black text-cyan-500 tracking-widest uppercase">Target Number</p>
+                  <motion.h3 
+                    key={data.resultNumber}
+                    initial={{ scale: 0.5 }} animate={{ scale: 1 }}
+                    className="text-8xl font-black text-white mt-1"
+                  >
+                    {data.resultNumber?.toString().padStart(2, '0')}
+                  </motion.h3>
+                  
+                  <div className="mt-4 flex justify-between items-center text-right border-t border-white/5 pt-4">
+                    <div>
+                        <p className="text-[10px] text-white/20 font-mono">CONFIDENCE</p>
+                        <p className="text-xl font-mono font-bold text-cyan-500">{data.confidence}%</p>
+                    </div>
+                    <div>
+                        <p className="text-[10px] text-white/20 font-mono">REFRESH</p>
+                        <p className="text-xl font-mono font-bold text-orange-500">{countdown}s</p>
+                    </div>
+                  </div>
+               </div>
+            </motion.div>
+          </div>
+
+          {/* History Section */}
+          <div className="bg-white/5 border border-white/10 p-8 rounded-[2.5rem] backdrop-blur-md">
+            <div className="flex items-center justify-between mb-8">
+              <h3 className="text-[10px] font-black text-white/40 uppercase tracking-[0.3em] flex items-center gap-3">
+                <LayoutGrid size={16} className="text-cyan-500"/> Sequence History
+              </h3>
+              <div className="h-[1px] flex-grow mx-6 bg-gradient-to-r from-white/10 to-transparent" />
+            </div>
+
+            <div className="grid grid-cols-5 md:grid-cols-10 gap-4">
+              <AnimatePresence mode='popLayout'>
+                {data.lastUpdates?.map((item, idx) => {
+                  const itemIsBig = item.includes('B');
+                  return (
+                    <motion.div 
+                      key={idx}
+                      initial={{ scale: 0.8, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      transition={{ delay: idx * 0.05 }}
+                      className="group flex flex-col items-center p-4 bg-[#0a0a0a] rounded-2xl border border-white/5 hover:border-cyan-500/30 transition-colors"
+                    >
+                      <span className={`text-xl font-black font-mono mb-1 ${itemIsBig ? 'text-orange-500' : 'text-cyan-400'}`}>
+                        {item.replace(/\D/g,'').padStart(2, '0')}
+                      </span>
+                      <span className="text-[8px] tracking-tighter font-bold opacity-40 group-hover:opacity-100 transition-opacity">
+                        {itemIsBig ? 'BIG' : 'SMALL'}
+                      </span>
+                    </motion.div>
+                  );
+                })}
+              </AnimatePresence>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* --- MARKET SIDEBAR --- */}
+        <AnimatePresence>
+          {showWeb && (
+            <motion.div 
+              initial={{ x: 100, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: 100, opacity: 0 }}
+              className="lg:w-[55%] h-[70vh] lg:h-auto bg-[#0a0a0a] border border-white/10 rounded-[2.5rem] overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.8)] sticky top-8"
+            >
+              <iframe 
+                src="https://www.tradingview.com/chart/" 
+                className="w-full h-full border-none pt-12 grayscale-[0.5] invert-[0.05]"
+                title="External-Market"
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
     </div>
   );
 };
