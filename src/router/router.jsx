@@ -4,6 +4,7 @@ import MainLayout from '../Layout/MainLayout';
 import Introduction from '../components/Introduction/Introduction';
 import Dashboard from '../components/Dashboard/Dashboard';
 import Login from '../components/Login/Login';
+import PrivateRoute from './PrivateRoute';
 
 const router =  createBrowserRouter([
 {
@@ -16,7 +17,7 @@ const router =  createBrowserRouter([
     },
     {
       path : '/DashBoard',
-      element : <Dashboard></Dashboard>
+      element : <PrivateRoute><Dashboard></Dashboard></PrivateRoute>
     },
     {
       path : '/Login',

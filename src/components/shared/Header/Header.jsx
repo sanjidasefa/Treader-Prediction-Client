@@ -21,7 +21,7 @@ const Header = () => {
             </ul>
           </div>
           <a className="btn btn-ghost text-xl iosevka-charon-bold tracking-tight">
-            RS<span className="text-primary">COMMUNITY</span>
+            R(S)<span className="text-primary">COMMUNITY</span>
           </a>
         </div>
 

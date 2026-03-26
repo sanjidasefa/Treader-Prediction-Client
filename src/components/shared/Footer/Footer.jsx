@@ -10,7 +10,7 @@ const Footer = () => {
         <div className="flex items-center gap-2 opacity-80">
           <ShieldCheck className="text-primary w-5 h-5" />
           <span className="iosevka-char-medium text-sm tracking-wide">
-            © 2026 <span className="text-primary font-bold">RS COMMUNITY CENTER</span>
+            © 2026 <span className="text-primary font-bold">R(S) COMMUNITY CENTER</span>
           </span>
         </div>
 

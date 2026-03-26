@@ -44,6 +44,11 @@ const Dashboard = () => {
     };
   }, []);
 
+const handleLogout = () => {
+  localStorage.removeItem("isLoggedIn");
+  localStorage.setItem("userRole", "");
+  window.location.href = "/"; 
+};
   return (
     <div className="p-4 md:p-6 min-h-screen w-full flex flex-col gap-6 font-sans mb-20">
       
@@ -68,7 +73,7 @@ const Dashboard = () => {
           </h1>
 
           <p className="mt-6 text-sm opacity-50 iosevka-charon-light italic">
-            *Signals update every 10 seconds based on RS Community algorithm.
+            *Signals update every 10 seconds based on R(S) Community algorithm.
           </p>
         </div>
       </div>
@@ -112,9 +117,8 @@ const Dashboard = () => {
             <p className="text-[10px] uppercase opacity-50 tracking-wider">Connection</p>
           </div>
         </div>
-
       </div>
-
+      <button onClick={handleLogout} className="btn btn-error">Log Out</button>
     </div>
   );
 };

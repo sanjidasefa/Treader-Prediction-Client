@@ -30,10 +30,10 @@ const Introduction = () => {
             Official Prediction Portal
           </div>
           <h1 className="text-4xl md:text-6xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary mb-4 leading-tight">
-            Welcome to <br /> RS COMMUNITY CENTER
+            Welcome to <br /> R(S) COMMUNITY CENTER
           </h1>
           <p className="text-lg md:text-xl opacity-80 max-w-2xl mx-auto font-medium">
-            Predict the market with <span className="text-primary font-bold">Rs Community Center</span>. 
+            Predict the market with <span className="text-primary font-bold">R(S) Community Center</span>. 
             Standard analysis and high-accuracy insights.
           </p>
         </div>

@@ -1,59 +1,82 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router';
+import { doc, getDoc } from "firebase/firestore"; 
+import { db } from "../../firebase/firebase.config"; 
 
 const Login = () => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const { register, handleSubmit, formState: { errors } } = useForm();
 
-  const onSubmit = (data) => {
-    console.log("Trader Code:", data.traderCode);
-    if (data.traderCode === "SHIFAT123") {
-      alert("Success! Welcome Shifat Hosane Mahim.");
-    } else {
-      alert("Invalid Code!");
+  const onSubmit = async (data) => {
+    setLoading(true);
+    try {
+      const docRef = doc(db, "auth", "codes");
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        const { adminCode, userCode } = docSnap.data();
+        const input = data.traderCode;
+
+        // User Input matching logic
+        if (input === adminCode || input === userCode) {
+          const role = (input === adminCode) ? "admin" : "user";
+          
+          // Session storage e save kora
+          localStorage.setItem("isLoggedIn", "true");
+          localStorage.setItem("userRole", role);
+          localStorage.setItem("userName", role === "admin" ? "Shifat Hosane Mahim" : "RS VIP Member");
+
+          alert(`Welcome ${role === "admin" ? 'Admin' : 'VIP Member'}!`);
+          navigate('/dashboard'); 
+        } else {
+          alert("❌ Invalid Trader Code! Try again.");
+        }
+      } else {
+        alert("⚠️ Configuration missing in Firebase! Please add 'auth/codes' in Firestore.");
+      }
+    } catch (error) {
+      console.error("Login Error:", error);
+      alert("🌐 Network Error! Check your connection.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="mt-10 max-w-md mx-auto p-8 bg-white/5 rounded-3xl border border-white/10 shadow-inner backdrop-blur-md">
-      <form onSubmit={handleSubmit(onSubmit)} className="form-control w-full">
-        <label className="label">
-          <span className="label-text font-semibold opacity-70 iosevka-charon-regular">
-            Enter Your Trader Code
-          </span>
-        </label>
+    <div className="mt-10 max-w-md mx-auto p-8 bg-white/5 rounded-3xl border border-white/10 shadow-2xl backdrop-blur-md">
+      <form onSubmit={handleSubmit(onSubmit)} className="form-control w-full space-y-4">
+        <div className="text-center mb-4">
+          <h2 className="text-2xl font-bold iosevka-charon-bold tracking-tight">System Login</h2>
+          <p className="text-xs opacity-50 iosevka-charon-light">Enter your unique identification code</p>
+        </div>
         
-        <div className="flex flex-col md:flex-row gap-3">
-          <div className="flex-grow">
-            <input 
-              type="password" 
-              placeholder="Code: XXXXXX" 
-              {...register("traderCode", { 
-                required: "Code is required",
-                minLength: { value: 4, message: "Min 4 characters" }
-              })}
-              className={`input input-bordered w-full bg-white/10 border-white/20 focus:border-primary transition-all text-center tracking-[0.3em] font-mono iosevka-charon-bold ${errors.traderCode ? 'border-error' : ''}`}
-            />
-          </div>
+        <div className="flex flex-col gap-4">
+          <input 
+            type="password" 
+            placeholder="TRADER CODE" 
+            disabled={loading}
+            {...register("traderCode", { required: "Code is required" })}
+            className={`input input-bordered w-full bg-white/10 border-white/20 focus:border-primary text-center tracking-[0.2em] font-mono iosevka-charon-bold ${errors.traderCode ? 'border-error' : ''}`}
+          />
+          
           <button 
             type="submit" 
-            className="btn btn-primary px-8 shadow-lg shadow-primary/30 hover:scale-105 active:scale-95 transition-all"
+            disabled={loading}
+            className={`btn btn-primary w-full shadow-lg shadow-primary/20 ${loading ? 'loading' : ''}`}
           >
-            Login
+            {loading ? 'Verifying...' : 'Access Dashboard'}
           </button>
         </div>
 
         {errors.traderCode && (
-          <label className="label">
-            <span className="label-text-alt text-error font-medium">{errors.traderCode.message}</span>
-          </label>
+          <p className="text-error text-center text-xs font-medium">{errors.traderCode.message}</p>
         )}
 
-        <p className="mt-6 text-[10px] uppercase tracking-widest opacity-40 iosevka-charon-light-italic text-center">
-          Secure Access • Rs Community Center
+        <div className="divider opacity-10"></div>
+        <p className="text-[10px] uppercase tracking-[0.2em] opacity-40 iosevka-charon-light-italic text-center">
+          Secure Access • R(S) Community Center
         </p>
       </form>
     </div>
