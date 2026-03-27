@@ -21,8 +21,7 @@ const Footer = () => {
 
         {/* Right Side: Navigation Buttons */}
         <div className="flex flex-wrap justify-center items-center gap-2 md:gap-4">
-          
-          {/* Logic Central - ONLY FOR ADMIN */}
+
           {isAdmin && (
             <Link 
               to='/LogicCentral' 
@@ -43,7 +42,9 @@ const Footer = () => {
           </Link>
 
           {/* Market Access (External Link) */}
-          <a 
+         {
+          (userRole || isAdmin )&& (
+             <a 
             href="https://dkwin9.com/#/register?invitationCode=23478531386" 
             target="_blank" 
             rel="noopener noreferrer"
@@ -52,6 +53,8 @@ const Footer = () => {
             <Globe size={14} className="group-hover:animate-spin-slow" />
             <span className="iosevka-charon-regular uppercase text-[10px] md:text-xs">Market Access</span>
           </a>
+          )
+         }
         </div>
 
       </footer>

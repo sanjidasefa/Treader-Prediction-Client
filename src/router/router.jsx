@@ -23,7 +23,7 @@ const router =  createBrowserRouter([
     },
     {
       path : '/LogicCentral',
-      element : <PrivateRoute><AdminRoute><LogicCentral></LogicCentral></AdminRoute></PrivateRoute>
+      element : <PrivateRoute><LogicCentral></LogicCentral></PrivateRoute>
     },
     {
       path : '/Login',

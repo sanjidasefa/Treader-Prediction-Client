@@ -29,7 +29,7 @@ const Introduction = () => {
           <img 
             src={introimg} 
             alt="Icon" 
-            className='rounded-full mb-4 w-24 h-24 md:w-40 md:h-40 object-cover border-2 border-primary/30 shadow-lg' 
+            className='rounded-full mb-4 w-38 h-38 md:w-40 md:h-40 object-cover border-2 border-primary/30 shadow-lg' 
           />
         </div>
 
