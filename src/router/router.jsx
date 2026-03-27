@@ -7,6 +7,7 @@ import Login from '../components/Login/Login';
 import PrivateRoute from './PrivateRoute';
 import LogicCentral from '../components/Dashboard/LOGIC/LogicCentral';
 import AdminRoute from './AdminRoute';
+import Market from '../components/Dashboard/Market/Market';
 
 const router =  createBrowserRouter([
 {
@@ -28,7 +29,11 @@ const router =  createBrowserRouter([
     {
       path : '/Login',
       element : <Login></Login>
-    }
+    },
+    {
+  path: '/MarketAccess',
+  element: <PrivateRoute><AdminRoute><LogicCentral></LogicCentral></AdminRoute></PrivateRoute>
+}
   ]
 }
 ])

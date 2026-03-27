@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { LayoutGrid, Globe, X, Activity, ShieldCheck, ExternalLink } from 'lucide-react';
 import api from '../../../api/axios';
+import { Link } from 'react-router';
 
 const Prediction = () => {
   const [data, setData] = useState(null);
@@ -15,8 +16,7 @@ const Prediction = () => {
     } catch (error) { console.error("Sync Error:", error); }
   };
 
- // Market Link
-  const MARKET_URL = "https://dkwin9.com/#/register?invitationCode=23478531386";
+  // const MARKET_URL = "https://dkwin9.com/#/register?invitationCode=23478531386";
 
 
   useEffect(() => {
@@ -83,9 +83,12 @@ const Prediction = () => {
               <h1 className={`text-3xl sm:text-5xl font-black italic ${isBig ? 'text-orange-500' : 'text-cyan-400'}`}>
                 {data.prediction}
               </h1>
-              <div className="mt-2 flex items-center gap-1.5">
+              <div className="mt-2 flex justify-between items-center gap-1.5">
                 <span className="text-sm text-white/20 font-mono">P-{data.period}</span>
-                <div className={`w-2 h-2 rounded-full bg-gradient-to-r ${getStatusColor(data.color)}`} title={data.color} />
+               <div className='flex justify-center items-center gap-2'>
+                 <div className={`w-2 h-2 rounded-full bg-gradient-to-r ${getStatusColor(data.color)}`} title={data.color} />
+             <h1>{data.color}</h1>
+               </div>
               </div>
             </div>
 
@@ -144,16 +147,15 @@ const Prediction = () => {
                 Security policy onmly allows opening the market in a secure external window.
               </p>
 
-              <a 
-                href={MARKET_URL} 
-                target="_blank" 
-                rel="noreferrer"
-                className="btn btn-primary px-8 rounded-xl flex items-center gap-3 shadow-lg shadow-primary/30 group"
-              >
-                <span className="font-bold tracking-widest uppercase">Open DkWin Market</span>
-                <ExternalLink size={16} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-              </a>
-
+             <Link
+              to="/MarketAccess"
+              className="btn btn-xs md:btn-sm btn-primary shadow-lg shadow-primary/20 rounded-lg flex items-center gap-1.5 group"
+            >
+              <Globe size={14} />
+              <span className="uppercase text-[10px] md:text-xs font-bold tracking-wider">
+                Market Access
+              </span>
+            </Link>
               <p className="mt-8 text-[9px] text-white/20 uppercase tracking-[0.4em]">Official Node Verified</p>
             </motion.div>
           )}

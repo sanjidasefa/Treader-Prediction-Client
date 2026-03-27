@@ -1,15 +1,16 @@
+// AdminRoute.jsx
 import React from 'react';
-import { Navigate, Outlet } from 'react-router';
+import { Navigate } from 'react-router';
 
-const AdminRoute = () => {
+const AdminRoute = ({ children }) => {
   const isLoggedIn = sessionStorage.getItem("isLoggedIn") === "true";
   const userRole = sessionStorage.getItem("userRole");
 
   if (isLoggedIn && userRole === "admin") {
-    return <Outlet />;
+    return children; 
   }
 
-  return <Navigate to="/dashboard" replace />;
+  return <Navigate to="/DashBoard" replace />;
 };
 
 export default AdminRoute;
