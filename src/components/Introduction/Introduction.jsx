@@ -2,6 +2,7 @@ import React from 'react';
 import img from '../../assets/loginBg.jpg'
 import Login from '../Login/Login';
 import introimg from '../../../public/icon.jpeg'
+
 const Introduction = () => {
   return (
     <div className="relative min-h-[80vh] flex items-center justify-center overflow-hidden rounded-3xl font-sans">

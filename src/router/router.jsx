@@ -5,6 +5,8 @@ import Introduction from '../components/Introduction/Introduction';
 import Dashboard from '../components/Dashboard/Dashboard';
 import Login from '../components/Login/Login';
 import PrivateRoute from './PrivateRoute';
+import LogicCentral from '../components/Dashboard/LOGIC/LogicCentral';
+import AdminRoute from './AdminRoute';
 
 const router =  createBrowserRouter([
 {
@@ -18,6 +20,10 @@ const router =  createBrowserRouter([
     {
       path : '/DashBoard',
       element : <PrivateRoute><Dashboard></Dashboard></PrivateRoute>
+    },
+    {
+      path : '/LogicCentral',
+      element : <PrivateRoute><AdminRoute><LogicCentral></LogicCentral></AdminRoute></PrivateRoute>
     },
     {
       path : '/Login',
