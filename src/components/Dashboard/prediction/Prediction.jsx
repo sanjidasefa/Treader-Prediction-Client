@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { LayoutGrid, Globe, X, Activity } from 'lucide-react';
+import { LayoutGrid, Globe, X, Activity, ShieldCheck, ExternalLink } from 'lucide-react';
 import api from '../../../api/axios';
 
 const Prediction = () => {
