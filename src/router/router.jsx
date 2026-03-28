@@ -24,7 +24,7 @@ const router =  createBrowserRouter([
     },
     {
       path : '/LogicCentral',
-      element : <PrivateRoute><LogicCentral></LogicCentral></PrivateRoute>
+      element : <PrivateRoute><AdminRoute><LogicCentral></LogicCentral></AdminRoute></PrivateRoute>
     },
     {
       path : '/Login',
@@ -32,7 +32,7 @@ const router =  createBrowserRouter([
     },
     {
   path: '/MarketAccess',
-  element: <PrivateRoute><AdminRoute><LogicCentral></LogicCentral></AdminRoute></PrivateRoute>
+  element: <PrivateRoute><Market></Market></PrivateRoute>
 }
   ]
 }

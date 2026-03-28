@@ -17,16 +17,14 @@ const LogicCentral = () => {
 
   const onSubmit = async (formData) => {
     setLoading(true);
-    setStatus({ type: '', msg: '' });
-    
+    setStatus({ type: '', msg: '' }); 
     try {
       const payload = {
         ...formData,
         number: Number(formData.number),
         timestamp: new Date(),
-        isHistory: false // Eita must thakte hobe jate prediction dashboard e data ashe
+        isHistory: false 
       };
-
       const response = await api.post('/prediction', payload);
       
       if (response.data) {

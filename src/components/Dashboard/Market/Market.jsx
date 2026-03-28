@@ -2,15 +2,19 @@ import React from 'react';
 
 const Market = () => {
   return (
-    <>
-      <div className="w-full h-[calc(100vh-140px)] bg-black">
+    <div className="w-full h-[calc(100vh-80px)] bg-black relative overflow-hidden">
+      {/* Loading indicator (Jodi load hote deri hoy) */}
+      <div className="absolute inset-0 flex items-center justify-center -z-10">
+         <span className="loading loading-dots loading-lg text-primary"></span>
+      </div>
+      
       <iframe 
         src="https://dkwin9.com/#/register?invitationCode=23478531386" 
-        className="w-full h-full border-none"
+        className="w-full h-full border-none shadow-2xl"
         title="Market Access"
+        sandbox="allow-forms allow-scripts allow-same-origin allow-popups"
       />
     </div>
-    </>
   );
 };
 
