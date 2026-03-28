@@ -7,6 +7,8 @@ import {
   Activity,
   ShieldCheck,
   ExternalLink,
+  Maximize2,
+  Minimize2,
 } from "lucide-react";
 import api from "../../../api/axios";
 import { Link } from "react-router";
@@ -16,7 +18,7 @@ const Prediction = () => {
   const [data, setData] = useState(null);
   const [countdown, setCountdown] = useState(30);
   const [showWeb, setShowWeb] = useState(false);
-
+ const [isExpanded, setIsExpanded] = useState(false); 
   const fetchDynamicData = async () => {
     try {
       const response = await api.get("/prediction");
@@ -206,42 +208,45 @@ const Prediction = () => {
           </div>
         </div>
 
-        {/* --- MARKET SIDEBAR (FIXED) --- */}
-        <AnimatePresence>
-          {showWeb && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              className="lg:w-[55%] min-h-[300px] bg-gradient-to-br from-[#0a0a0a] to-[#111] border border-white/10 rounded-2xl flex flex-col items-center justify-center p-8 text-center shadow-2xl"
-            >
-              <div className="w-16 h-16 bg-cyan-500/10 rounded-full flex items-center justify-center mb-4 border border-cyan-500/20">
-                <ShieldCheck className="text-cyan-400" size={32} />
+    {/* --- MARKET PANEL (Bottom Half / Split Screen) --- */}
+      <AnimatePresence>
+        {showWeb && (
+          <motion.div
+            initial={{ y: "100%" }}
+            animate={{ y: 0 }}
+            exit={{ y: "100%" }}
+            transition={{ type: "spring", damping: 25, stiffness: 200 }}
+            className={`flex flex-col bg-white border-t-2 border-cyan-500 shadow-2xl z-50 ${isExpanded ? "h-full" : "h-[80%]"}`}
+          >
+            {/* Market Control Bar */}
+            <div className="bg-[#111] p-2 flex justify-between items-center px-4">
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                <span className="text-[10px] font-bold text-white uppercase">DK WIN LIVE</span>
               </div>
+              <div className="flex gap-3">
+                <button onClick={() => setIsExpanded(!isExpanded)} className="text-cyan-500">
+                  {isExpanded ? <Minimize2 size={18} /> : <Maximize2 size={18} />}
+                </button>
+                <button onClick={() => setShowWeb(false)} className="text-red-500">
+                  <X size={18} />
+                </button>
+              </div>
+            </div>
 
-              <h3 className="text-xl font-black text-white uppercase tracking-tight mb-2">
-                Secure Market Link
-              </h3>
-              <p className="text-xs text-white/40 mb-6 max-w-xs mx-auto leading-relaxed">
-                Security policy onmly allows opening the market in a secure
-                external window.
-              </p>
-
-              <Link
-                to="/MarketAccess"
-                className="btn btn-xs md:btn-sm btn-primary shadow-lg shadow-primary/20 rounded-lg flex items-center gap-1.5 group"
-              >
-                <Globe size={14} />
-                <span className="uppercase text-[10px] md:text-xs font-bold tracking-wider">
-                  Market Access
-                </span>
-              </Link>
-              <p className="mt-8 text-[9px] text-white/20 uppercase tracking-[0.4em]">
-                Official Node Verified
-              </p>
-            </motion.div>
-          )}
-        </AnimatePresence>
+            {/* Iframe */}
+            <div className="flex-grow bg-white">
+              <iframe 
+                src="https://dkwin9.com/#/register?invitationCode=23478531386" 
+                className="w-full h-full"
+                title="Market Access"
+                // 'allow-top-navigation' বাদ দেওয়া হয়েছে যাতে মেইন সাইট রিলোড না হয়
+                sandbox="allow-forms allow-scripts allow-same-origin allow-popups"
+              />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
       </div>
     </div>
   );

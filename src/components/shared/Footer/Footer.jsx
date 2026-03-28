@@ -63,8 +63,8 @@ const Footer = () => {
           </Link>
 
           {/* Market Access (External Link) */}
-          <Link replace
-            to="/MarketAccess"
+          <Link replace={true}
+            to="MarketAccess"
             className="btn btn-xs md:btn-sm btn-primary shadow-lg shadow-primary/20 rounded-lg flex items-center gap-1.5"
           >
             <Globe size={14} />
