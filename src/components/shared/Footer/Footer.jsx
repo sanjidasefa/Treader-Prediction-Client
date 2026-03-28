@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { LayoutDashboard, Globe, ShieldCheck, Terminal } from "lucide-react";
 import { Link } from "react-router";
-
+import introimg from '../../../../public/icon.jpeg';
 const Footer = () => {
   const [role, setRole] = useState(sessionStorage.getItem("userRole"));
 
@@ -18,14 +18,20 @@ const Footer = () => {
     <div className="fixed bottom-1 left-0 w-full z-50 px-2">
       <footer className="max-w-full mx-auto bg-white/10 dark:bg-black/60 backdrop-blur-xl border border-white/20 shadow-2xl rounded-2xl p-3 md:p-4 flex flex-col md:flex-row items-center justify-between gap-3">
         {/* Left Side: Branding */}
-        <div className="flex items-center gap-2 opacity-80">
-          <ShieldCheck className="text-primary w-4 h-4 md:w-5 md:h-5" />
-          <span className="iosevka-char-medium text-[10px] md:text-sm tracking-wide text-white/70">
-            © 2026{" "}
+        <div className="flex items-center gap-2 opacity-80 flex-col">
+          <img 
+            src={introimg} 
+            alt="Icon" 
+            className='rounded-full mb-4 w-15 h-15 object-cover border-2 border-primary/30 shadow-lg' 
+          />    
+
+           <span className="flex  gap-1 justify-center items-center iosevka-char-medium text-[10px] md:text-sm tracking-wide text-white/70">
+            <ShieldCheck className="text-primary w-4 h-4 md:w-5 md:h-5" ></ShieldCheck> © 2026{" "}
             <span className="text-primary font-bold uppercase">
               R(S) Community
             </span>
           </span>
+        
         </div>
 
         {/* Right Side: Navigation Buttons */}
@@ -57,7 +63,7 @@ const Footer = () => {
           </Link>
 
           {/* Market Access (External Link) */}
-          <Link
+          <Link replace
             to="/MarketAccess"
             className="btn btn-xs md:btn-sm btn-primary shadow-lg shadow-primary/20 rounded-lg flex items-center gap-1.5"
           >
