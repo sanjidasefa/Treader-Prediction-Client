@@ -61,16 +61,6 @@ const Footer = () => {
               Dashboard
             </span>
           </Link>
-{/* 
-          <Link replace={true}
-            to="MarketAccess"
-            className="btn btn-xs md:btn-sm btn-primary shadow-lg shadow-primary/20 rounded-lg flex items-center gap-1.5"
-          >
-            <Globe size={14} />
-            <span className="uppercase text-[10px] md:text-xs font-bold">
-              Market Access
-            </span>
-          </Link> */}
         </div>
       </footer>
     </div>

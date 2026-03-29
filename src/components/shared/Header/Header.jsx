@@ -28,13 +28,8 @@ const Header = () => {
         <div className="navbar-center hidden lg:flex">
           <ul className="menu menu-horizontal px-1 font-medium">
              <li><Link to='/'>HOME</Link></li>
-          
             <li><Link to='/Dashboard'>DASHBOARD</Link></li>
           </ul>
-        </div>
-
-        <div className="navbar-end">
-          <Link to='/Login' className="btn btn-primary btn-sm md:btn-md rounded-lg">Login</Link>
         </div>
       </div>
     </div>
