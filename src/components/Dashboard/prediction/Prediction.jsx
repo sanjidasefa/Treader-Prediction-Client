@@ -9,7 +9,7 @@ const Prediction = () => {
   const [countdown, setCountdown] = useState(30);
   const [showWeb, setShowWeb] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
-  const [serial, setSerial] = useState(51727n); 
+  const [serial, setSerial] = useState(51770n); 
 
   const getDynamicDateStr = () => {
     const now = new Date();
@@ -32,25 +32,25 @@ const Prediction = () => {
 
  useEffect(() => {
     fetchDynamicData();
+    
     const timer = setInterval(() => {
       const now = new Date();
-      const fastNow = new Date(now.getTime() + 2000); 
+      const fastNow = new Date(now.getTime()); 
       const seconds = fastNow.getSeconds();
-      const remain = seconds < 30 ? 30 - seconds : 60 - seconds;           
+      const remain = seconds < 30 ? 30 - seconds : 60 - seconds;      
       setCountdown(remain);
       if (remain === 30) {
         setSerial(prevSerial => prevSerial + 1n);
         setDateStr(getDynamicDateStr()); 
       }
-
-      // 5 second baki thakte data fetch
       if (remain === 5) {
         fetchDynamicData();
       }
-    }, 1000); // 1 second interval-e check korbe
-
+    }, 1000);
     return () => clearInterval(timer);
   }, []);
+
+
   if (!data) return <div className="h-screen bg-[#050505] flex items-center justify-center"><div className="w-8 h-8 border-2 border-cyan-500 border-t-transparent rounded-full animate-spin" /></div>;
   const fullPeriodId = `${dateStr}1000${serial.toString()}`;
 
