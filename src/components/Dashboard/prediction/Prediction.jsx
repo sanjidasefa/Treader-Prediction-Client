@@ -108,30 +108,31 @@ const PREDICTION_DATA = [
     { "period": "99", "number": 5, "size": "Big", "color": "Green-Violet" }
 ];
 const START_TIME = new Date();
-const START_INDEX = 2;
-const FIXED_PREFIX = "1000518";
+const START_INDEX = 74;
 
 const Prediction = () => {
   const [countdown, setCountdown] = useState(30);
   const [currentPeriod, setCurrentPeriod] = useState(START_INDEX);
   const [showWeb, setShowWeb] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
+const [dynamicPrefix, setDynamicPrefix] = useState("1000519");
 
   /* 🔥 Date string */
   const getDynamicDateStr = () => {
     const now = new Date();
     return `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, "0")}${String(now.getDate()).padStart(2, "0")}`;
   };
-  /* 🔥 MAIN ENGINE (Time-based calculation) */
-  const updateGameState = () => {
+  const FIXED_PREFIX_BASE = 1000519;
+
+const updateGameState = () => {
   const now = new Date();
   const diffInSeconds = Math.floor((now - START_TIME) / 1000);
   const periodPassed = Math.floor(diffInSeconds / 30);
   const newPeriod = START_INDEX + periodPassed;
   setCurrentPeriod(newPeriod);
-  /* 🔥 PERFECT COUNTDOWN */
-  const remain = 30 - (diffInSeconds % 30);
+ const remain = 30 - (diffInSeconds % 30);
   setCountdown(remain === 30 ? 0 : remain);
+  setDynamicPrefix(String(FIXED_PREFIX_BASE + periodPassed));
 };
 
   useEffect(() => {
@@ -143,7 +144,7 @@ const Prediction = () => {
 const dataIndex = currentPeriod % 100;
 const currentData = PREDICTION_DATA[dataIndex] || PREDICTION_DATA[0];
 const formattedPeriod = String(dataIndex).padStart(2, "0");
-const fullPeriodId = `${getDynamicDateStr()}${FIXED_PREFIX}${formattedPeriod}`;
+const fullPeriodId = `${getDynamicDateStr()}${dynamicPrefix}${formattedPeriod}`;
   /* 🔥 history */
   const historyData = useMemo(() => {
     const history = [];
@@ -186,11 +187,10 @@ const fullPeriodId = `${getDynamicDateStr()}${FIXED_PREFIX}${formattedPeriod}`;
     </div>
 
     {/* PREDICTION + TIMER */}
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+    <div className="grid grid-cols-2 gap-3">
 
       {/* PREDICTION CARD */}
       <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-4 shadow-lg relative overflow-hidden">
-
         <div className={`absolute top-0 right-0 w-24 h-24 blur-3xl opacity-20 ${
           currentData.size === "Big" ? "bg-orange-500" : "bg-cyan-400"
         }`} />
