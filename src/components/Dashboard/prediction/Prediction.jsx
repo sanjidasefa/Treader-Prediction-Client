@@ -108,7 +108,7 @@ const PREDICTION_DATA = [
     { "period": "99", "number": 5, "size": "Big", "color": "Green-Violet" }
 ];
 const START_TIME = new Date();
-const START_INDEX = 74;
+const START_INDEX = 76;
 
 const Prediction = () => {
   const [countdown, setCountdown] = useState(30);
