@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, Maximize2, Minimize2, ShieldCheck, History } from "lucide-react";
 import introimg from "../../../../public/icon.jpeg";
 
-/* ================= PREDICTION DATA (100 ITEMS) ================= */
 const PREDICTION_DATA = [
     { "period": "00", "number": 8, "size": "Big", "color": "Red" },
     { "period": "01", "number": 8, "size": "Big", "color": "Red" },
@@ -106,7 +105,7 @@ const PREDICTION_DATA = [
     { "period": "98", "number": 6, "size": "Big", "color": "Red" },
     { "period": "99", "number": 5, "size": "Big", "color": "Green-Violet" }
 ];
-const START_INDEX = 1;
+const START_INDEX = 52;
 
 const Prediction = () => {
     const [countdown, setCountdown] = useState(30);
@@ -119,33 +118,24 @@ const Prediction = () => {
         const now = new Date();
         const seconds = now.getSeconds();
         const milliseconds = now.getMilliseconds();
-
         // ১. টাইমিং সিঙ্ক (মিলি-সেকেন্ডসহ যাতে স্লো না হয়)
         const totalSeconds = seconds + (milliseconds / 1000);
         const remain = Math.ceil(30 - (totalSeconds % 30));
         setCountdown(remain === 0 ? 30 : remain);
-
-        // ২. পিরিয়ড ক্যালকুলেশন
         const totalSecondsInDay = (now.getHours() * 3600) + (now.getMinutes() * 60) + seconds;
         const periodPassed = Math.floor(totalSecondsInDay / 30);
-
-        // ৩. আপনার START_INDEX অনুযায়ী পিরিয়ড নির্ধারণ
-        // এটি আপনার ১০০টি ডাটার (00-99) মধ্যে লুপ করবে
         const dataIdx = (START_INDEX + periodPassed) % 100;
         setCurrentPeriodIndex(dataIdx);
 
         // ৪. পিরিয়ড আইডি ফরম্যাট (YYYYMMDD...XX)
         const dateStr = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, "0")}${String(now.getDate()).padStart(2, "0")}`;
-        const formattedIdx = String(dataIdx).padStart(2, "0");
-        
-        // ফাইনাল আইডি যা UI-তে দেখাবে: 20260401...95
+        const formattedIdx = String(dataIdx).padStart(2, "0").slice(0,2);
         const finalId = `${dateStr}...${formattedIdx}`; 
         setFullPeriodId(finalId);
     };
 
     useEffect(() => {
         updateGameState();
-        // ৫০০ মিলি-সেকেন্ড পর পর চেক করবে যাতে ঘড়ি একুরেট থাকে
         const timer = setInterval(updateGameState, 500);
         return () => clearInterval(timer);
     }, []);
@@ -172,7 +162,6 @@ const Prediction = () => {
 
     return (
         <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#050505] via-[#0a0a0a] to-black text-slate-200">
-            {/* MAIN UI */}
             <div className={`${showWeb ? (isExpanded ? "hidden" : "h-[40vh]") : "flex-1"} transition-all duration-300 p-3 space-y-3 overflow-y-auto`}>
                 
                 {/* HEADER */}
