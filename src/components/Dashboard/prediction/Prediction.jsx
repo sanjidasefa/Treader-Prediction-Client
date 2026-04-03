@@ -105,7 +105,7 @@ const PREDICTION_DATA = [
     { "period": "98", "number": 6, "size": "Big", "color": "Red" },
     { "period": "99", "number": 5, "size": "Big", "color": "Green-Violet" }
 ];
-const START_INDEX = 52;
+const START_INDEX = 42;
 
 const Prediction = () => {
     const [countdown, setCountdown] = useState(30);
@@ -122,15 +122,24 @@ const Prediction = () => {
         const totalSeconds = seconds + (milliseconds / 1000);
         const remain = Math.ceil(30 - (totalSeconds % 30));
         setCountdown(remain === 0 ? 30 : remain);
-        const totalSecondsInDay = (now.getHours() * 3600) + (now.getMinutes() * 60) + seconds;
-        const periodPassed = Math.floor(totalSecondsInDay / 30);
-        const dataIdx = (START_INDEX + periodPassed) % 100;
+     const currentMinute = now.getMinutes();
+        const currentSecond = now.getSeconds();
+        
+        // প্রতি মিনিটে ২টি স্লট (০-২৯ এবং ৩০-৫৯)
+        const slotInMinute = Math.floor(currentSecond / 30); 
+        const totalSlotsSinceHourStart = (currentMinute * 2) + slotInMinute;
+
+        // START_INDEX এর সাথে এটি যোগ হবে যাতে ডাটা পরিবর্তন হয়
+        // আপনি যদি চান ডাটা একদম ফিক্সড থাকুক, তবে শুধু START_INDEX ব্যবহার করতে পারেন
+        const dataIdx = (START_INDEX + totalSlotsSinceHourStart) % 100;
         setCurrentPeriodIndex(dataIdx);
 
-        // ৪. পিরিয়ড আইডি ফরম্যাট (YYYYMMDD...XX)
+        // ৩. পিরিয়ড আইডি ফরম্যাট (YYYYMMDD...XX)
         const dateStr = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, "0")}${String(now.getDate()).padStart(2, "0")}`;
-        const formattedIdx = String(dataIdx).padStart(2, "0").slice(0,2);
-        const finalId = `${dateStr}...${formattedIdx}`; 
+        
+        // PREDICTION_DATA থেকে সরাসরি পিরিয়ড নম্বর নেওয়া
+        const periodNumber = PREDICTION_DATA[dataIdx]?.period || "00";
+        const finalId = `${dateStr}...${periodNumber}`; 
         setFullPeriodId(finalId);
     };
 
@@ -161,7 +170,7 @@ const Prediction = () => {
     };
 
     return (
-        <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#050505] via-[#0a0a0a] to-black text-slate-200">
+        <div className=" flex flex-col bg-gradient-to-br from-[#050505] via-[#0a0a0a] to-black text-slate-200">
             <div className={`${showWeb ? (isExpanded ? "hidden" : "h-[40vh]") : "flex-1"} transition-all duration-300 p-3 space-y-3 overflow-y-auto`}>
                 
                 {/* HEADER */}
@@ -225,22 +234,42 @@ const Prediction = () => {
                 </div>
             </div>
 
-            {/* LIVE MARKET IFRAME */}
-            <AnimatePresence>
-                {showWeb && (
-                    <motion.div initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }}
-                        className={`fixed bottom-0 left-0 w-full bg-white z-50 rounded-t-2xl overflow-hidden ${isExpanded ? "h-full" : "h-[80vh]"}`}>
-                        <div className="bg-black text-white p-3 flex justify-between items-center">
-                            <span className="text-xs font-bold">LIVE MARKET</span>
-                            <div className="flex gap-3">
-                                <button onClick={() => setIsExpanded(!isExpanded)}>{isExpanded ? <Minimize2 size={18}/> : <Maximize2 size={18}/>}</button>
-                                <button onClick={() => setShowWeb(false)}><X size={18}/></button>
-                            </div>
-                        </div>
-                        <iframe src="https://dkwin9.com/#/register?invitationCode=23478531386" className="w-full h-full" />
-                    </motion.div>
-                )}
-            </AnimatePresence>
+{/* LIVE MARKET IFRAME */}
+<AnimatePresence>
+  {showWeb && (
+    <motion.div 
+      initial={{ y: "100%" }} 
+      animate={{ y: 0 }} 
+      exit={{ y: "100%" }}
+      transition={{ type: "spring", damping: 25, stiffness: 200 }}
+      drag="y"
+      dragConstraints={{ top: 0, bottom: 600 }} 
+      dragElastic={0.1}
+      className="fixed bottom-0 left-0 w-full bg-[#0a0a0a] z-[100] rounded-t-[30px] shadow-[0_-10px_40px_rgba(0,0,0,0.5)] border-t border-white/10 overflow-hidden touch-none h-[85vh]"
+    >
+      <div className="w-full flex flex-col items-center py-3 cursor-grab active:cursor-grabbing bg-black/50 backdrop-blur-md">
+        <div className="w-16 h-1.5 bg-white/20 rounded-full mb-2" />
+        <div className="flex justify-between items-center w-full px-6">
+          <span className="text-[10px] font-bold text-white/50 tracking-[0.2em]">LIVE MARKET</span>
+          <div className="flex gap-4">
+             <button onClick={() => setShowWeb(false)} className="text-white/40 hover:text-red-500 transition-colors">
+                <X size={20}/>
+             </button>
+          </div>
+        </div>
+      </div>
+
+      {/* IFRAME CONTENT */}
+      <div className="w-full h-full">
+        <iframe 
+          src="https://dkwin9.com/#/register?invitationCode=23478531386" 
+          className="w-full h-full border-none"
+          title="Market Site"
+        />
+      </div>
+    </motion.div>
+  )}
+</AnimatePresence>
         </div>
     );
 };

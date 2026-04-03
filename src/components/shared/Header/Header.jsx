@@ -4,7 +4,7 @@ import { Link } from 'react-router';
 const Header = () => {
   return (
     // Backdrop-blur and semi-transparent background for Glassmorphism
-    <div className="sticky top-0 z-50 w-full px-4 py-2">
+    <div className=" w-full px-4 py-2">
       <div className="navbar bg-white/10 dark:bg-black/20 backdrop-blur-md border border-white/20 shadow-xl rounded-2xl">
         
         <div className="navbar-start">

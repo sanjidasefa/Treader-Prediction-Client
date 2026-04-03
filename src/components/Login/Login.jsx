@@ -3,8 +3,9 @@ import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router';
 import { doc, getDoc } from "firebase/firestore"; 
 import { db } from "../../firebase/firebase.config"; 
-// Icon gulo import koro
 import { Eye, EyeOff, Lock } from 'lucide-react';
+import { motion } from 'framer-motion';
+import {  Loader2 } from 'lucide-react'; 
 
 const Login = () => {
   const navigate = useNavigate();
@@ -73,19 +74,46 @@ const Login = () => {
             </button>
           </div>
           
-          <button 
-            type="submit" 
-            disabled={loading}
-            className={`btn btn-primary w-full shadow-lg shadow-primary/20 ${loading ? 'loading' : ''}`}
-          >
-            {loading ? 'Verifying...' : 'Access Dashboard'}
-          </button>
-        </div>
 
+<motion.button 
+  type="submit" 
+  disabled={loading}
+  whileHover={{ scale: 1.02 }}
+  whileTap={{ scale: 0.98 }}
+  className={`
+    relative w-full h-10 overflow-hidden rounded-sm font-bold uppercase tracking-[0.15em] transition-all
+    ${loading 
+      ? 'bg-primary/50 cursor-not-allowed' 
+      : 'bg-primary hover:shadow-[0_0_20px_rgba(var(--p),0.4)] text-black shadow-lg shadow-primary/20'
+    }
+  `}
+>
+  <div className="flex items-center justify-center gap-3">
+    {loading ? (
+      <>
+        <Loader2 size={20} className="animate-spin" />
+        <span className="iosevka-charon-bold text-sm">Verifying...</span>
+      </>
+    ) : (
+      <>
+        <Lock size={18} className="opacity-80" />
+        <span className="iosevka-charon-bold text-base">Access Dashboard</span>
+      </>
+    )}
+  </div>
+  {!loading && (
+    <motion.div 
+      initial={{ x: '-100%' }}
+      animate={{ x: '100%' }}
+      transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
+      className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none"
+    />
+  )}
+</motion.button>
+        </div>
         {errors.traderCode && (
           <p className="text-error text-center text-xs font-medium">{errors.traderCode.message}</p>
         )}
-
         <div className="divider opacity-10"></div>
         <p className="text-[10px] uppercase tracking-[0.2em] opacity-40 iosevka-charon-light-italic text-center">
           Secure Access • R(S) Community Center

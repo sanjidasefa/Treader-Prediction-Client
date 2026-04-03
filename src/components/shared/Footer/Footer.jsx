@@ -15,7 +15,7 @@ const Footer = () => {
 
   const isAdmin = role === "admin";
   return (
-    <div className="fixed bottom-1 left-0 w-full z-50 px-2">
+    <div className=" w-full px-2">
       <footer className="max-w-full mx-auto bg-white/10 dark:bg-black/60 backdrop-blur-xl border border-white/20 shadow-2xl rounded-2xl p-3 md:p-4 flex flex-col md:flex-row items-center justify-between gap-3">
         {/* Left Side: Branding */}
         <div className="flex items-center gap-2 opacity-80 flex-col">
