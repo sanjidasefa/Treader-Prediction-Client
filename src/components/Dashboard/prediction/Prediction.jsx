@@ -304,7 +304,7 @@ const Prediction = () => {
               {" "}
               {/* pb-5 দেওয়া হয়েছে যাতে একদম নিচে একটু গ্যাপ থাকে */}
               <iframe
-                src="https://dkwin9.com/#/register?invitationCode=23478531386"
+                src="https://21bdwin24.com/register?inviteCode=BHGMRNW&from=web"
                 className="w-full h-full border-none"
                 title="Market Site"
                 style={{ height: "100%", minHeight: "100%" }}
